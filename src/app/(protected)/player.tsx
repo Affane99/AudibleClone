@@ -1,34 +1,59 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Pressable, Image } from 'react-native';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
+import dummyBooks from '@/dummyBooks';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PlaybackBar from '@/components/PlayBackBar';
+
 const PlayerScreen = () => {
+    const book = dummyBooks[0];
     return (
-        <View className='bg-gray-900 items-center justify-center flex-1'>
+        <SafeAreaView className='bg-gray-900 items-center justify-center flex-1 gap-10'>
             <Pressable
-                className='absolute top-0 left-0 p-2 bg-slate-800 rounded-full' 
+                className='absolute top-0 left-0 p-2 bg-slate-800 rounded-full'
                 onPress={() => router.back()}>
                 <Entypo name='chevron-down' size={24} color="white" />
             </Pressable>
 
+            <View className='w-3/5 aspect-square rounded-3xl overflow-hidden'>
+                <Image source={{ uri: book.thumbnail_url }} className='w-full h-full' />
+            </View>
+
             <Text className='text-white'>Now Playing</Text>
-            <View className="items-center mb-10">
-                <Text className="text-lg font-semibold text-white">Audio Title</Text>
-                <Text className="text-base text-gray-400">Author Name</Text>
+            <View className="items-center">
+                <Text className="text-lg font-semibold text-white">
+                    {book.title}
+                </Text>
+                <Text className="text-base text-gray-400">
+                    {book.author}
+                </Text>
             </View>
-            <View className="flex-row justify-between w-3/5">
+
+            <View className="w-4/5">
+                <PlaybackBar value={0.5} />
+            </View>
+
+
+            <View className="flex-row justify-between items-center w-4/5">
                 <TouchableOpacity>
-                    <Ionicons name="play-back" size={40} color="white" />
+                    <Ionicons name="play-skip-back" size={30} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Ionicons name="play" size={50} color="white" />
+                    <Ionicons name="play-back" size={35} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity className="p-10 rounded-full bg-white relative">
+                    <Ionicons name="play" size={40} color="black" className="absolute right-3 bottom-4" />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Ionicons name="play-forward" size={40} color="white" />
+                    <Ionicons name="play-forward" size={35} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Ionicons name="play-skip-forward" size={30} color="white" />
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
