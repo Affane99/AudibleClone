@@ -6,9 +6,14 @@ import { router } from 'expo-router';
 import dummyBooks from '@/dummyBooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PlaybackBar from '@/components/PlayBackBar';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 
 const PlayerScreen = () => {
     const book = dummyBooks[0];
+    const player = useAudioPlayer({ uri: book.audio_url });
+    const playerStatus = useAudioPlayerStatus(player);
+
+
     return (
         <SafeAreaView className='bg-gray-900 items-center justify-center flex-1 gap-10'>
             <Pressable
@@ -32,24 +37,39 @@ const PlayerScreen = () => {
             </View>
 
             <View className="w-4/5">
-                <PlaybackBar value={0.5} />
+                <PlaybackBar
+                    duration={playerStatus.duration}
+                    currentTime={playerStatus.currentTime}
+                    bufferedTime={70}
+                />
             </View>
 
 
             <View className="flex-row justify-between items-center w-4/5">
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => player.seekTo(-15)}>
                     <Ionicons name="play-skip-back" size={30} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => player.seekTo(-5)}>
                     <Ionicons name="play-back" size={35} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity className="p-10 rounded-full bg-white relative">
-                    <Ionicons name="play" size={40} color="black" className="absolute right-3 bottom-4" />
+                <TouchableOpacity
+                    onPress={() => {
+                        if (playerStatus.playing) {
+                            player.pause()
+                        } else {
+                            player.play();
+                        }
+                    }}>
+                    <Ionicons
+                        name={playerStatus.playing ? 'pause' : 'play'}
+                        size={40}
+                        color="white"
+                    />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => player.seekTo(5)}>
                     <Ionicons name="play-forward" size={35} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => player.seekTo(15)}>
                     <Ionicons name="play-skip-forward" size={30} color="white" />
                 </TouchableOpacity>
             </View>
