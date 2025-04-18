@@ -41,6 +41,7 @@ const PlayerScreen = () => {
                     duration={playerStatus.duration}
                     currentTime={playerStatus.currentTime}
                     bufferedTime={70}
+                    onSeek={(seconds:number) => player.seekTo(seconds)}
                 />
             </View>
 

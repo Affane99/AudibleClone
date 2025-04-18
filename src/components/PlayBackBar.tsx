@@ -1,22 +1,47 @@
-import { Text, View } from 'react-native';
+import { useState } from 'react';
+import { GestureResponderEvent, LayoutChangeEvent, Pressable, Text, View } from 'react-native';
 
 type PlaybackBarProps = {
   duration: number;
   currentTime: number;
   bufferedTime?: number;
+  onSeek: (seconds: number) => void;
 }
 
-export default function PlaybackBar({ duration, currentTime, bufferedTime }: PlaybackBarProps) {
+export default function PlaybackBar({ duration, currentTime, bufferedTime, onSeek }: PlaybackBarProps) {
+  const [progressBarWidth, setProgressBarWidth] = useState(0);
   const progress = currentTime / duration;
+
   function formatTime(currentTime: number): React.ReactNode {
     const minutes = Math.floor(currentTime / 60);
     const seconds = Math.floor(currentTime % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   }
 
+  function handleSeek(event: GestureResponderEvent) {
+    const tapX = event.nativeEvent.locationX;
+    if (!progressBarWidth || duration === 0) return;
+
+    const newProgress = tapX / progressBarWidth;
+    const seekTime = Math.min(Math.max(newProgress * duration, 0), duration);
+
+    onSeek(seekTime);
+  }
+
+
+  const onProgressBarLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setProgressBarWidth(width);
+  };
+
+
   return (
     <View>
-      <View className='w-full bg-slate-600 h-2 rounded-full justify-center'>
+      <Pressable
+        className='w-full bg-slate-600 h-2 rounded-full justify-center'
+        onPress={handleSeek}
+        onLayout={onProgressBarLayout}
+      >
         <View
           className='bg-orange-400 h-full rounded-full z-10'
           style={{ width: `${progress * 100}%` }}
@@ -33,7 +58,7 @@ export default function PlaybackBar({ duration, currentTime, bufferedTime }: Pla
             }}
           />
         )}
-      </View>
+      </Pressable>
       <View className='flex-row justify-between mt-2'>
         <Text className='text-gray-400 text-sm'>{formatTime(currentTime)}</Text>
         <Text className='text-gray-400 text-sm'>{formatTime(duration)}</Text>
