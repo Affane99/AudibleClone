@@ -41,6 +41,7 @@ export default function PlaybackBar({ duration, currentTime, bufferedTime, onSee
         className='w-full bg-slate-600 h-2 rounded-full justify-center'
         onPress={handleSeek}
         onLayout={onProgressBarLayout}
+        hitSlop={20}
       >
         <View
           className='bg-orange-400 h-full rounded-full z-10'

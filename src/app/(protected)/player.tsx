@@ -40,7 +40,7 @@ const PlayerScreen = () => {
                 <PlaybackBar
                     duration={playerStatus.duration}
                     currentTime={playerStatus.currentTime}
-                    bufferedTime={70}
+                    bufferedTime={5}
                     onSeek={(seconds:number) => player.seekTo(seconds)}
                 />
             </View>
