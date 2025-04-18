@@ -1,17 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Pressable, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, Image } from 'react-native';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-import dummyBooks from '@/dummyBooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PlaybackBar from '@/components/PlayBackBar';
-import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
+import { useAudioPlayerStatus } from 'expo-audio';
+import { usePlayer } from '@/providers/PlayerProvider';
 
 const PlayerScreen = () => {
-    const book = dummyBooks[0];
-    const player = useAudioPlayer({ uri: book.audio_url });
+    const { player, book, setBook } = usePlayer();
+    
+    if (!book) return null;
+
     const playerStatus = useAudioPlayerStatus(player);
+
 
 
     return (
@@ -41,7 +44,7 @@ const PlayerScreen = () => {
                     duration={playerStatus.duration}
                     currentTime={playerStatus.currentTime}
                     bufferedTime={5}
-                    onSeek={(seconds:number) => player.seekTo(seconds)}
+                    onSeek={(seconds: number) => player.seekTo(seconds)}
                 />
             </View>
 
