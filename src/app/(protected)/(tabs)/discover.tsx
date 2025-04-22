@@ -1,10 +1,10 @@
-import { supabase } from "@/lib/supabase";
-import { useEffect } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { useSupabase } from "@/lib/supabase";
+import { ActivityIndicator, FlatList, Text } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { BookListItem } from "@/components/BookListItem";
 
 export default function Discover() {
+  const supabase = useSupabase();
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["books"],
