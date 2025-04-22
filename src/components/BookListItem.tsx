@@ -22,7 +22,7 @@ export function BookListItem({ book }: BookListItemProps) {
         className='w-16 aspect-square rounded-md'
       />
       <View className='gap-1 flex-1'>
-        <Text className='text-2xl text-gray-100'>{book.title}</Text>
+        <Text className='text-lg text-gray-100'>{book.title}</Text>
         <Text className='text-gray-400'>{book.author}</Text>
       </View>
       <AntDesign name='playcircleo' size={24} color='gainsboro' />

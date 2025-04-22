@@ -15,6 +15,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     const [book, setBook] = useState<Book | null>(null);
 
     const player = useAudioPlayer({ uri: book?.audio_url });
+    player.play();
     return (
         <PlayerContext.Provider value={{ player, book, setBook }}>
             {children}

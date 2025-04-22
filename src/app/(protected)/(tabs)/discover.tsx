@@ -1,10 +1,30 @@
-import { FlatList, Text, View } from "react-native";
-import { Book } from "../../types/Book";
+import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { BookListItem } from "@/components/BookListItem";
 
 export default function Discover() {
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["books"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("books").select("*");
+      if (error) throw new Error(error.message);
+      return data;
+    },
+  });
+
+  if (isLoading) return <ActivityIndicator />;
+
+  if (error) return <Text className="text-red-500">Error: {error.message}</Text>;
+
   return (
-    <View className="flex-1 bg-slate-800 justify-center p-4 pt-16">
-      <Text className="text-2xl text-gray-100">Discover</Text>
-    </View>
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => <BookListItem book={item} />}
+      contentContainerClassName="gap-4 p-4"
+    />
   );
 }
